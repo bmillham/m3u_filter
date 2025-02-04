@@ -1,0 +1,7 @@
+/target
+/Cargo.lock
+*~
+/L7-1.m3u
+*.m3u
+*.txt
+/config.toml
