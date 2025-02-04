@@ -1,0 +1,38 @@
+# Example config file. Edit for your use and rename as config.toml
+
+# URLs/files to download/read and parse
+urls = ["http://server.domain/get.php?username=uname&password=pw&type=m3u_plus&output=ts",
+           "file:///path/to/file.m3u"]
+
+# Template filename to save the filtered m3u
+# This will save files as L7-1.m3u, L7-2.m3u etc depending on how many urls are specified above
+# If not specified then the files will be default-1.m3u, default-2.m3u etc.
+template = "L7"
+
+# A file to save stream titles after filtering the m3u, but before filtering using channels.
+# If not specified then no file will be created
+all_channels = "all_channels.txt"
+
+# REGEX is allowed in all the following settings
+# Channels to include in the final m3u. 
+channels = ["KCNC.*", "BURLINGTON",  "MELBOURNE", "DENVER", "MTV CLASSIC"]
+
+# Stream URLs to ignore. This example ignores all mkv strings. Leave empty if you want all stream types
+ignore_url = [".mkv$"]
+
+# Channels to ignore by title
+ignore_title = [ "PPV",
+        "NBA",
+        "MLB",
+        "NFL",
+        "SKY",
+        "TELEMUNDO",
+        "TENNIS",
+        "NHL",
+        "SPECTRUM",
+        "SPORTS",
+        "HULU",
+        "PAC 12"]
+
+# Only include streams from these countries.
+countries = ["^US:", "^UK:", "^AU:"]
