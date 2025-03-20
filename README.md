@@ -29,4 +29,17 @@ not yet started working on, so you can ignore them.
 After the program runs you will get one or more m3u files that have been filtered down
 as you configured. You can then import that m3u into TVHeadend, VLC or other player.
 
+# Building
+If you want to run this from a cron job, etc you need to build the project. To do this just run
+
+cargo build --release
+
+And you will find m3u_filter in target/release
+
+You can copy that file anywhere you'd like. By default it will look for the config file in the current directory.
+This obviously isn't good for running from a cron job, so I added an option to specify the config file so you can now do:
+
+m3u_filter -c /home/user/projects/m3u\_filter/m3u\_filter\_config.toml
+
+
 Enjoy! And feedback is welcome!
