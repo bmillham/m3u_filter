@@ -2,6 +2,7 @@ use m3u_parser::M3uParser;
 use serde_derive::Deserialize;
 use serde_json::Value;
 use std::{fs::File, io::Write};
+use clap::Parser;
 
 #[derive(Deserialize, Debug)]
 struct Config {
@@ -15,17 +16,25 @@ struct Config {
     countries: Vec<String>,
 }
 
+#[derive(Parser, Debug)]
+#[command(version, about, long_about=None)]
+struct Args {
+	#[arg(short, long, default_value="m3u_filter_config.toml")]
+	config_file: String
+}
+
 #[tokio::main]
 async fn main() {
-    let config_file = "m3u_filter_config.toml";
-    let config_contents = match std::fs::read_to_string(config_file) {
+	let args = Args::parse();
+	
+    let config_contents = match std::fs::read_to_string(&args.config_file) {
         Ok(c) => c,
-        Err(e) => panic!("Error {e:?} reading {config_file}"),
+        Err(e) => panic!("Error {e:?} reading {}", args.config_file),
     };
 
     let config: Config = match toml::from_str(&config_contents) {
         Ok(c) => c,
-        Err(e) => panic!("Error {e:?} parsing {config_file}"),
+        Err(e) => panic!("Error {e:?} parsing {}", args.config_file),
     };
 
     let channels: Vec<&str> = config.channels.iter().map(|s| &**s).collect();
