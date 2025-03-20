@@ -1,25 +1,25 @@
 A simple program to filter an M3U list.
 Read the config_example.toml file for examples
 
-To install rust:
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+To install rust:\
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh\
 This will install everything you need to use Rust
 
-To install m3u_filter, clone this to your projects directory:
-mkdir -p projects
-cd projects
-git clone https://github.com/bmillham/m3u_filter
+To install m3u\_filter, clone this to your projects directory:\
+mkdir -p projects\
+cd projects\
+git clone https://github.com/bmillham/m3u_filter\
 
-The project is now in projects/m3u_filter
+The project is now in projects/m3u\_filter\
 
-cd m3u_filter
-Everything from here on is done in the m3u_filter directory.
+cd m3u\_filter\
+Everything from here on is done in the m3u\_filter directory.
 
-Copy config_example.toml to m3u_filter_config.toml and edit to your liking
+Copy config_example.toml to m3u\_filter\_config.toml and edit to your liking
 
-Once you've edited m3u_filter_config.toml you are ready to run:
+Once you've edited m3u\_filter\_config.toml you are ready to run:\
 
-cargo run
+cargo run\
 
 The first time you run you will notice a lot of packages being downloaded and compiled.
 This is normal.
