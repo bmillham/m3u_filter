@@ -5,7 +5,15 @@ To install rust:
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 This will install everything you need to use Rust
 
-To install m3u_filter, clone this to your projects directory.
+To install m3u_filter, clone this to your projects directory:
+mkdir -p projects
+cd projects
+git clone https://github.com/bmillham/m3u_filter
+
+The project is now in projects/m3u_filter
+
+cd m3u_filter
+Everything from here on is done in the m3u_filter directory.
 
 Copy config_example.toml to m3u_filter_config.toml and edit to your liking
 
