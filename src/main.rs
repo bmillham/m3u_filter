@@ -9,6 +9,7 @@ struct Config {
     template: Option<String>,
     channels: Vec<String>,
     all_channels: Option<String>,
+    new_channels: Option<String>,
     ignore_url: Vec<String>,
     ignore_title: Vec<String>,
     countries: Vec<String>,
@@ -16,7 +17,7 @@ struct Config {
 
 #[tokio::main]
 async fn main() {
-    let config_file = "config.toml";
+    let config_file = "m3u_filter_config.toml";
     let config_contents = match std::fs::read_to_string(config_file) {
         Ok(c) => c,
         Err(e) => panic!("Error {e:?} reading {config_file}"),
@@ -55,12 +56,14 @@ async fn main() {
             ignore_title.len(),
             parser.streams_info.len()
         );
-        parser.filter_by("title", countries.clone(), "", true, false);
-        println!(
-            "Number of streams in {} countries: {}",
-            countries.len(),
-            parser.streams_info.len()
-        );
+        if !countries.is_empty() {
+            parser.filter_by("title", countries.clone(), "", true, false);
+            println!(
+                "Number of streams in {} countries: {}",
+                countries.len(),
+                parser.streams_info.len()
+            );
+        }
 
         if count == 1 {
             // Save all streams to a file

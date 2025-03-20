@@ -5,3 +5,4 @@
 *.m3u
 *.txt
 /config.toml
+/m3u_filter_config.toml

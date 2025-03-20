@@ -1,4 +1,4 @@
-# Example config file. Edit for your use and rename as config.toml
+# Example config file. Edit for your use and rename as m3u_filter_config.toml
 
 # URLs/files to download/read and parse
 urls = ["http://server.domain/get.php?username=uname&password=pw&type=m3u_plus&output=ts",
@@ -11,7 +11,13 @@ template = "L7"
 
 # A file to save stream titles after filtering the m3u, but before filtering using channels.
 # If not specified then no file will be created
+# This is nice for looking through to find channels you might like to add.
 all_channels = "all_channels.txt"
+
+# A file to save channels added after last scan
+# If not specified then no file will be created
+# This is not implimented yet.
+new_channels = "new_channels.txt"
 
 # REGEX is allowed in all the following settings
 # Channels to include in the final m3u. 
