@@ -53,6 +53,9 @@ async fn main() {
         println!("Downloading/parsing {url}");
         let mut parser = M3uParser::new(None);
         parser.parse_m3u(&url, false, true).await;
+		if parser.streams_info.len() == 0 {
+			continue;
+		}
         println!("Number of streams found: {}", parser.streams_info.len());
         parser.sort_by("title", "", true, false);
         parser.filter_by("url", ignore_url.clone(), "", false, false);
