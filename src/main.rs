@@ -20,7 +20,9 @@ struct Config {
 #[command(version, about, long_about=None)]
 struct Args {
 	#[arg(short, long, default_value="m3u_filter_config.toml")]
-	config_file: String
+	config_file: String,
+	#[arg(short, long, default_value=".")]
+	output_dir: String
 }
 
 #[tokio::main]
@@ -78,7 +80,7 @@ async fn main() {
             // Save all streams to a file
             match config.all_channels {
                 Some(ref s) => {
-                    let mut output = match File::create(s) {
+                    let mut output = match File::create(args.output_dir.to_owned() + "/" + s) {
                         Ok(f) => f,
                         Err(e) => {
                             panic!("Error creating {s}: {e:?}");
@@ -106,7 +108,7 @@ async fn main() {
             channels.len(),
             parser.streams_info.len()
         );
-        parser.to_file(&format!("{template}-{count}"), "m3u");
+        parser.to_file(&format!("{}/{template}-{count}", args.output_dir), "m3u");
 
         count += 1;
     }

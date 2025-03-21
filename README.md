@@ -36,10 +36,9 @@ cargo build --release
 
 And you will find m3u_filter in target/release
 
-You can copy that file anywhere you'd like. By default it will look for the config file in the current directory.
-This obviously isn't good for running from a cron job, so I added an option to specify the config file so you can now do:
+You can copy that file anywhere you'd like. By default it will look for the config file and put the parsed files in the current directory.
+This obviously isn't good for running from a cron job, so I added an options to specify the config file and where to put the parsed files so you can now do:
 
-m3u_filter -c /home/user/projects/m3u\_filter/m3u\_filter\_config.toml
-
+m3u_filter -c /home/user/projects/m3u\_filter/m3u\_filter\_config.toml -o /home/user/projects/m3u\_filter
 
 Enjoy! And feedback is welcome!
