@@ -1,7 +1,7 @@
 use m3u_parser::M3uParser;
 use serde_derive::Deserialize;
 use serde_json::Value;
-use std::{fs::File, io::Write};
+use std::{fs::File, io::Write, path::{Path, PathBuf}};
 use clap::Parser;
 
 #[derive(Deserialize, Debug)]
@@ -80,10 +80,11 @@ async fn main() {
             // Save all streams to a file
             match config.all_channels {
                 Some(ref s) => {
-                    let mut output = match File::create(args.output_dir.to_owned() + "/" + s) {
+					let of = Path::new(&args.output_dir).join(s);
+                    let mut output = match File::create(&of) {
                         Ok(f) => f,
                         Err(e) => {
-                            panic!("Error creating {s}: {e:?}");
+                            panic!("Error creating {of:?}: {e:?}");
                         }
                     };
                     let js = match parser.get_json(false) {
@@ -108,7 +109,15 @@ async fn main() {
             channels.len(),
             parser.streams_info.len()
         );
-        parser.to_file(&format!("{}/{template}-{count}", args.output_dir), "m3u");
+
+		let mut of = String::new();
+
+		if args.output_dir == "." {
+			of = Path::new(&format!("{template}-{count}")).display().to_string();
+		} else {
+			of = Path::new(&args.output_dir).join(format!("{template}-{count}")).display().to_string();
+		}
+        parser.to_file(&of, "m3u");
 
         count += 1;
     }
