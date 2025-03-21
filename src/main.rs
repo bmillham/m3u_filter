@@ -25,6 +25,8 @@ struct Args {
 	output_dir: String,
 	#[arg(short, long)]
 	input_file: Option<String>,
+	#[arg(short, long)]
+	template: Option<String>,
 }
 
 #[tokio::main]
@@ -49,10 +51,13 @@ async fn main() {
     let ignore_url: Vec<&str> = config.ignore_url.iter().map(|s| &**s).collect();
     let ignore_title: Vec<&str> = config.ignore_title.iter().map(|s| &**s).collect();
     let countries: Vec<&str> = config.countries.iter().map(|s| &**s).collect();
-    let template = match config.template {
-        Some(s) => s,
-        _ => String::from("default"),
-    };
+	let template = match args.template {
+		Some(s) => s,
+		_ => match config.template {
+			Some(s) => s,
+			_ => String::from("default"),
+		},
+	};
 
     let mut count = 1;
     //for url in config.urls {
