@@ -22,7 +22,9 @@ struct Args {
 	#[arg(short, long, default_value="m3u_filter_config.toml")]
 	config_file: String,
 	#[arg(short, long, default_value=".")]
-	output_dir: String
+	output_dir: String,
+	#[arg(short, long)]
+	input_file: Option<String>,
 }
 
 #[tokio::main]
@@ -39,6 +41,10 @@ async fn main() {
         Err(e) => panic!("Error {e:?} parsing {}", args.config_file),
     };
 
+	let urls = match args.input_file {
+		Some(s) => vec![s],
+		_ => config.urls.iter().map(|s| s.to_string()).collect(),
+	};
     let channels: Vec<&str> = config.channels.iter().map(|s| &**s).collect();
     let ignore_url: Vec<&str> = config.ignore_url.iter().map(|s| &**s).collect();
     let ignore_title: Vec<&str> = config.ignore_title.iter().map(|s| &**s).collect();
@@ -49,7 +55,8 @@ async fn main() {
     };
 
     let mut count = 1;
-    for url in config.urls {
+    //for url in config.urls {
+	for url in urls {
         println!("Downloading/parsing {url}");
         let mut parser = M3uParser::new(None);
         parser.parse_m3u(&url, false, true).await;
