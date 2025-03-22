@@ -30,7 +30,7 @@ struct Args {
 }
 
 #[tokio::main]
-async fn main() {
+async fn main()  {
 	let args = Args::parse();
 	
     let config_contents = match std::fs::read_to_string(&args.config_file) {
@@ -109,7 +109,10 @@ async fn main() {
 					let fs = of.file_stem().unwrap();
 					let ext = of.extension().unwrap();
 					let diff_file = output_dir.join(format!("{}_diff.{}", fs.to_str().unwrap(), ext.to_str().unwrap()));
-					let original_contents = read_to_string(&of).unwrap();
+					let original_contents = match read_to_string(&of) {
+						Ok(s) => s,
+						Err(_) => String::new(),
+					};
 					
                     let mut output = match File::create(&of) {
                         Ok(f) => f,
