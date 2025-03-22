@@ -41,4 +41,10 @@ This obviously isn't good for running from a cron job, so I added an options to 
 
 m3u_filter -c /home/user/projects/m3u\_filter/m3u\_filter\_config.toml -o /home/user/projects/m3u\_filter
 
+# Options
++ -c, --config\_file: Specify the location of the config file. Defaults to m3u\_filter\_config.toml in the current directory
++ -o, --output\_dir: Specify where to write the files. Defaults to the current directory
++ -i, --input\_file: A local m3u file (or URL). Overrides the [urls] section in the config file. Useful for testing.
++ -t, --template: Overrides the template setting in the config file. Useful for testing.
+
 Enjoy! And feedback is welcome!
