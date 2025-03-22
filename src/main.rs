@@ -108,11 +108,8 @@ async fn main() {
 					let of = output_dir.join(s);
 					let fs = of.file_stem().unwrap();
 					let ext = of.extension().unwrap();
-					//let save = output_dir.join(format!("{}_old.{}", fs.to_str().unwrap(), ext.to_str().unwrap()));
 					let diff_file = output_dir.join(format!("{}_diff.{}", fs.to_str().unwrap(), ext.to_str().unwrap()));
 					let original_contents = read_to_string(&of).unwrap();
-					
-					//rename(&of, &save); // Save the previous list so we can diff it later
 					
                     let mut output = match File::create(&of) {
                         Ok(f) => f,
