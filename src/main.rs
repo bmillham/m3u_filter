@@ -21,8 +21,8 @@ struct Config {
 struct Args {
 	#[arg(short, long, default_value="m3u_filter_config.toml")]
 	config_file: String,
-	#[arg(short, long, default_value=".")]
-	output_dir: String,
+	#[arg(short, long)]
+	output_dir: Option<String>,
 	#[arg(short, long)]
 	input_file: Option<String>,
 	#[arg(short, long)]
@@ -58,9 +58,19 @@ async fn main() {
 			_ => String::from("default"),
 		},
 	};
+	let output_dir = match args.output_dir {
+		Some(ref s) => {
+			if s == "." {
+				Path::new("")
+			} else {
+				Path::new(s)
+			}
+		},
+		_ => Path::new(""),
+	};
 
     let mut count = 1;
-    //for url in config.urls {
+
 	for url in urls {
         println!("Downloading/parsing {url}");
         let mut parser = M3uParser::new(None);
@@ -95,7 +105,7 @@ async fn main() {
             // Save all streams to a file
             match config.all_channels {
                 Some(ref s) => {
-					let of = Path::new(&args.output_dir).join(s);
+					let of = output_dir.join(s);
                     let mut output = match File::create(&of) {
                         Ok(f) => f,
                         Err(e) => {
@@ -125,14 +135,7 @@ async fn main() {
             parser.streams_info.len()
         );
 
-		let mut of = String::new();
-
-		if args.output_dir == "." {
-			of = Path::new(&format!("{template}-{count}")).display().to_string();
-		} else {
-			of = Path::new(&args.output_dir).join(format!("{template}-{count}")).display().to_string();
-		}
-        parser.to_file(&of, "m3u");
+		parser.to_file(&output_dir.join(format!("{template}-{count}")).display().to_string(), "m3u");
 
         count += 1;
     }
