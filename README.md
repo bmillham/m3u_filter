@@ -23,11 +23,12 @@ cargo run
 
 The first time you run you will notice a lot of packages being downloaded and compiled.
 This is normal.
-You may also see a few Rust warnings: They are because of a new feature I have
-not yet started working on, so you can ignore them.
 
 After the program runs you will get one or more m3u files that have been filtered down
 as you configured. You can then import that m3u into TVHeadend, VLC or other player.
+
+Also if you set the all\_channels option then that will be populated with all available channels (minus what you defined in ignore\_url).\
+And when you run m3u\_filter again then a new file, all\_channels\_diff will be created with what was added or deleted.
 
 # Building
 If you want to run this from a cron job, etc you need to build the project. To do this just run
