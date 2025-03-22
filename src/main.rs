@@ -151,7 +151,9 @@ async fn main() {
 							changes += 1;
 						}
 					}
-					println!("Changes from last update: {changes}");
+					if changes > 0 {
+						println!("Saved {changes} changes to {diff_file:?}");
+					}
                 }
                 _ => println!("Not saving full list"),
             }
