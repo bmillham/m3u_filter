@@ -1,8 +1,9 @@
 use m3u_parser::M3uParser;
 use serde_derive::Deserialize;
 use serde_json::Value;
-use std::{fs::{File, rename}, io::Write, path::Path};
+use std::{fs::{File, read_to_string}, io::Write, path::Path};
 use clap::Parser;
+use similar::{ChangeTag, TextDiff};
 
 #[derive(Deserialize, Debug)]
 struct Config {
@@ -10,7 +11,6 @@ struct Config {
     template: Option<String>,
     channels: Vec<String>,
     all_channels: Option<String>,
-    new_channels: Option<String>,
     ignore_url: Vec<String>,
     ignore_title: Vec<String>,
     countries: Vec<String>,
@@ -106,6 +106,14 @@ async fn main() {
             match config.all_channels {
                 Some(ref s) => {
 					let of = output_dir.join(s);
+					let fs = of.file_stem().unwrap();
+					let ext = of.extension().unwrap();
+					//let save = output_dir.join(format!("{}_old.{}", fs.to_str().unwrap(), ext.to_str().unwrap()));
+					let diff_file = output_dir.join(format!("{}_diff.{}", fs.to_str().unwrap(), ext.to_str().unwrap()));
+					let original_contents = read_to_string(&of).unwrap();
+					
+					//rename(&of, &save); // Save the previous list so we can diff it later
+					
                     let mut output = match File::create(&of) {
                         Ok(f) => f,
                         Err(e) => {
@@ -122,7 +130,28 @@ async fn main() {
                     for j in v {
                         writeln!(output, "{}", j["title"]).expect("Error");
                     }
-                    println!("Saved full filtered channel list to {s}");
+                    println!("Saved full filtered channel list to {of:?}");
+					let new_contents = read_to_string(&of).unwrap();
+					let cdiff = TextDiff::from_lines(&original_contents, &new_contents);
+					let mut diff_output = match File::create(&diff_file) {
+                        Ok(f) => f,
+                        Err(e) => {
+                            panic!("Error creating {diff_file:?}: {e:?}");
+                        }
+                    };
+					let mut changes = 0;
+					for change in cdiff.iter_all_changes() {
+						let sign = match change.tag() {
+							ChangeTag::Delete => "-",
+							ChangeTag::Insert => "+",
+							ChangeTag::Equal => " ",
+						};
+						if sign != " " {
+							write!(diff_output, "{sign} {change}").expect("Failed to write diff info");
+							changes += 1;
+						}
+					}
+					println!("Changes from last update: {changes}");
                 }
                 _ => println!("Not saving full list"),
             }
