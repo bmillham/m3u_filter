@@ -4,6 +4,9 @@ use serde_json::Value;
 use std::{fs::{File, read_to_string}, io::Write, path::Path};
 use clap::Parser;
 use similar::{ChangeTag, TextDiff};
+//#![feature(os_str_display)]
+//use std::ffi::OsStr;
+
 
 #[derive(Deserialize, Debug)]
 struct Config {
@@ -30,7 +33,7 @@ struct Args {
 }
 
 #[tokio::main]
-async fn main()  {
+async fn main() {
 	let args = Args::parse();
 	
     let config_contents = match std::fs::read_to_string(&args.config_file) {
@@ -107,8 +110,13 @@ async fn main()  {
                 Some(ref s) => {
 					let of = output_dir.join(s);
 					let fs = of.file_stem().unwrap();
-					let ext = of.extension().unwrap();
-					let diff_file = output_dir.join(format!("{}_diff.{}", fs.to_str().unwrap(), ext.to_str().unwrap()));
+					let ext = match of.extension() {
+						Some(s) => {
+							String::from(format!(".{}", s.to_string_lossy()))
+						},
+						_ => String::new(),
+					};
+					let diff_file = output_dir.join(format!("{}_diff{}", fs.to_str().unwrap(), ext));
 					let original_contents = match read_to_string(&of) {
 						Ok(s) => s,
 						Err(_) => String::new(),
@@ -140,10 +148,18 @@ async fn main()  {
                         }
                     };
 					let mut changes = 0;
+					let mut inserted = 0;
+					let mut deleted = 0;
 					for change in cdiff.iter_all_changes() {
 						let sign = match change.tag() {
-							ChangeTag::Delete => "-",
-							ChangeTag::Insert => "+",
+							ChangeTag::Delete => {
+								deleted += 1;
+								"-"
+							},
+							ChangeTag::Insert => {
+								inserted += 1;
+								"+"
+							},
 							ChangeTag::Equal => " ",
 						};
 						if sign != " " {
@@ -152,7 +168,11 @@ async fn main()  {
 						}
 					}
 					if changes > 0 {
+						println!("Found {inserted} new streams.");
+						println!("{deleted} streams are no longer available.");
 						println!("Saved {changes} changes to {diff_file:?}");
+					} else {
+						println!("No streams were added or deleted");
 					}
                 }
                 _ => println!("Not saving full list"),
