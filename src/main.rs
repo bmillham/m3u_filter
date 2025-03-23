@@ -4,9 +4,6 @@ use serde_json::Value;
 use std::{fs::{File, read_to_string}, io::Write, path::Path};
 use clap::Parser;
 use similar::{ChangeTag, TextDiff};
-//#![feature(os_str_display)]
-//use std::ffi::OsStr;
-
 
 #[derive(Deserialize, Debug)]
 struct Config {
