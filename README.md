@@ -1,7 +1,12 @@
-A simple program to filter an M3U list.
+# A simple program to filter an M3U list.
+
+## Configuration
 Read the config_example.toml file for examples
 
-To install rust:\
+# Installation
+## Linux
+If you don't already have rust installed follow these instructions to install it:\
+
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh\
 This will install everything you need to use Rust
 
@@ -29,6 +34,9 @@ as you configured. You can then import that m3u into TVHeadend, VLC or other pla
 
 Also if you set the all\_channels option then that will be populated with all available channels (minus what you defined in ignore\_url).\
 And when you run m3u\_filter again then a new file, all\_channels\_diff will be created with what was added or deleted.
+
+## Windows
+Go to the Releases page and download m3u_filter.zip
 
 # Building
 If you want to run this from a cron job, etc you need to build the project. To do this just run
